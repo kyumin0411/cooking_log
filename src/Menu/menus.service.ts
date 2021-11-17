@@ -58,6 +58,28 @@ export class MenuService {
   async getMenus() {
     const result = new ModelDTO.ResponseDTO();
 
+    const getMenus = await this.menusRepository.find();
+    const getMenusPayload = new MenuDTO.GetMenusResDTO();
+
+    getMenusPayload.total = await this.menusRepository.count();
+    getMenusPayload.menus = getMenus.map((menu) => {
+      const getMenu = new ModelDTO.MenuDTO();
+
+      getMenu.id = menu.id;
+      getMenu.createdAt = moment(menu.createdAt).format('YYYY-MM-DDTHH:mm:ss');
+      getMenu.updatedAt = moment(menu.updatedAt).format('YYYY-MM-DDTHH:mm:ss');
+      getMenu.title = menu.title;
+      getMenu.difficulty = menu.difficulty;
+      getMenu.image = menu.image;
+      getMenu.ingredients = menu.ingredients.split(',');
+      getMenu.bookmark = menu.bookmark;
+
+      return getMenu;
+    });
+
+    result.code = HttpStatus.OK;
+    result.message = '';
+    result.payload = getMenusPayload;
     return result;
   }
 }

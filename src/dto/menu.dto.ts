@@ -8,13 +8,11 @@ export class PostMenuBodyDTO extends PickType(MenuDTO, [
   'ingredients',
 ]) {}
 
-export class PostMenuResDTO extends PickType(MenuDTO, [
-  'id',
-  'createdAt',
-  'updatedAt',
-  'title',
-  'image',
-  'difficulty',
-  'bookmark',
-  'ingredients',
-]) {}
+export class PostMenuResDTO extends MenuDTO {}
+
+export class GetMenusResDTO {
+  @ApiProperty({ description: '등록된 메뉴 개수' })
+  total: number;
+  @ApiProperty({ description: '메뉴 데이터' })
+  menus: MenuDTO[];
+}
