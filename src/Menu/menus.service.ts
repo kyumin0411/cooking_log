@@ -82,4 +82,38 @@ export class MenuService {
     result.payload = getMenusPayload;
     return result;
   }
+
+  async getMenu(menuId: string) {
+    const result = new ModelDTO.ResponseDTO();
+
+    const findMenu = await this.menusRepository.findOne(menuId);
+
+    if (findMenu) {
+      const getMenuResDTO = new MenuDTO.GetMenuResDTO();
+
+      getMenuResDTO.id = findMenu.id;
+      getMenuResDTO.createdAt = moment(findMenu.createdAt).format(
+        'YYYY-MM-DDTHH:mm:ss',
+      );
+      getMenuResDTO.updatedAt = moment(findMenu.updatedAt).format(
+        'YYYY-MM-DDTHH:mm:ss',
+      );
+      getMenuResDTO.title = findMenu.title;
+      getMenuResDTO.image = findMenu.image;
+      getMenuResDTO.difficulty = findMenu.difficulty;
+      getMenuResDTO.bookmark = findMenu.bookmark;
+      getMenuResDTO.ingredients = findMenu.ingredients.split(',');
+      // getMenuResDTO.recipes = ;
+
+      result.message = '';
+      result.payload = getMenuResDTO;
+    } else {
+      result.message = 'Menu Not Found.';
+      result.payload = null;
+    }
+
+    result.code = HttpStatus.OK;
+
+    return result;
+  }
 }

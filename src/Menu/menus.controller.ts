@@ -3,12 +3,13 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MenuService } from './menus.service';
 import * as MenuDTO from '../dto/menu.dto';
 
@@ -37,11 +38,32 @@ export class MenuController {
   @ApiOperation({ summary: '메뉴 전체 조회' })
   @ApiResponse({
     status: HttpStatus.OK,
-    type: '',
+    type: MenuDTO.GetMenusResDTO,
     description: '',
   })
   async getMenus(@Req() req: Request, @Res() res: Response) {
     const result = await this.menuService.getMenus();
+    res.status(result.code).json(result);
+  }
+
+  @Get('/:menuId')
+  @ApiOperation({ summary: '메뉴 상세 조회' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: MenuDTO.GetMenuResDTO,
+    description: '',
+  })
+  @ApiParam({
+    name: 'menuId',
+    type: 'string',
+    description: '조회할 메뉴 아이디',
+  })
+  async getMenu(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('menuId') menuId: string,
+  ) {
+    const result = await this.menuService.getMenu(menuId);
     res.status(result.code).json(result);
   }
 }
