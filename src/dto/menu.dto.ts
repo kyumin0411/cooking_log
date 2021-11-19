@@ -21,6 +21,11 @@ export class PatchMenuReqDTO extends PartialType(
 
 export class PatchMenuResDTO extends MenuDTO {}
 
+export class GetMenusReqDTO {
+  @ApiProperty({ description: '검색할 요리 제목', required: false })
+  title?: string;
+}
+
 export class GetMenusResDTO {
   @ApiProperty({ description: '등록된 메뉴 개수' })
   total: number;

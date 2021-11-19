@@ -3,7 +3,7 @@ import * as ModelDTO from '../dto/model.dto';
 import * as MenuDTO from '../dto/menu.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Menu, Recipe } from 'src/entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 const moment = require('moment');
 
@@ -55,13 +55,23 @@ export class MenuService {
     return result;
   }
 
-  async getMenus() {
+  async getMenus(getMenusReqDTO: MenuDTO.GetMenusReqDTO) {
     const result = new ModelDTO.ResponseDTO();
 
-    const getMenus = await this.menusRepository.find();
+    const { title } = getMenusReqDTO;
+
+    const findQuery = {};
+    if (title) {
+      findQuery['title'] = Like(`%${title}%`);
+    }
+
+    const getMenus = await this.menusRepository.find({
+      where: findQuery,
+    });
+
     const getMenusPayload = new MenuDTO.GetMenusResDTO();
 
-    getMenusPayload.total = await this.menusRepository.count();
+    getMenusPayload.total = getMenus.length;
     getMenusPayload.menus = getMenus.map((menu) => {
       const getMenu = new ModelDTO.MenuDTO();
 

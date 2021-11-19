@@ -44,8 +44,12 @@ export class MenuController {
     type: MenuDTO.GetMenusResDTO,
     description: '',
   })
-  async getMenus(@Req() req: Request, @Res() res: Response) {
-    const result = await this.menuService.getMenus();
+  async getMenus(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query() query: MenuDTO.GetMenusReqDTO,
+  ) {
+    const result = await this.menuService.getMenus(query);
     res.status(result.code).json(result);
   }
 
