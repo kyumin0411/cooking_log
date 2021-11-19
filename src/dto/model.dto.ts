@@ -35,9 +35,9 @@ export class RecipeDTO {
   @ApiProperty({ description: '레시피 아이디' })
   id: number;
   @ApiProperty({ description: '레시피 글' })
-  description: number;
+  description: string;
   @ApiProperty({ description: '레시피 과정 사진' })
-  image: number;
+  image: string;
 }
 export class RecipesDTO {
   @ApiProperty({ description: '메뉴 아이디' })

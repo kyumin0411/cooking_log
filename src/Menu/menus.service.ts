@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import * as ModelDTO from '../dto/model.dto';
 import * as MenuDTO from '../dto/menu.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Menu, Recipe } from 'src/entity';
+import { Menu } from 'src/entity';
 import { Like, Repository } from 'typeorm';
 
 const moment = require('moment');

@@ -4,10 +4,12 @@ import { MenuService } from 'src/Menu/menus.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Menu, Recipe } from 'src/entity';
 import { MenuModule } from 'src/Menu/menus.module';
+import { RecipeModule } from 'src/Recipe/recipe.module';
 
 @Module({
   imports: [
     MenuModule,
+    RecipeModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
