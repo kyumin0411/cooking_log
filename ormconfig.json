@@ -1,0 +1,17 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "alticast#",
+  "database": "CookingLog",
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "cli": {
+    "entitiesDir": "src/entity",
+    "migrationsDir": "src/migration"
+  },
+  "migrationsRun": true,
+  "migrations": ["dist/migrations/*{.ts,.js}"],
+  "synchronize": false,
+  "autoLoadEntities": true
+}
