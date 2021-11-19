@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   Req,
   Res,
@@ -40,6 +41,28 @@ export class RecipeController {
     @Param('menuId') menuId: number,
   ) {
     const result = await this.recipeService.postRecipes(menuId, body);
+    res.status(result.code).json(result);
+  }
+
+  @Put('/update/:menuId')
+  @ApiOperation({ summary: '레시피 수정' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: RecipeDTO.PostRecipesResDTO,
+    description: '',
+  })
+  @ApiParam({
+    name: 'menuId',
+    type: 'number',
+    description: '수정할 레시피 아이디',
+  })
+  async putRecipes(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('menuId') menuId: number,
+    @Body() body: RecipeDTO.PutRecipesReqBodyDTO,
+  ) {
+    const result = await this.recipeService.putRecipes(menuId, body);
     res.status(result.code).json(result);
   }
 }

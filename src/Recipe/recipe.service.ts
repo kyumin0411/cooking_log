@@ -25,17 +25,17 @@ export class RecipeService {
 
     const findMenu = await this.menusRepository.findOne(menuId);
 
-    const insertRecipe = postRecipesBodyDTO.recipes.map((value) => {
-      const newRecipe = new Recipe();
+    await Promise.all(
+      postRecipesBodyDTO.recipes.map(async (value) => {
+        const newRecipe = new Recipe();
 
-      newRecipe.menu = findMenu;
-      newRecipe.image = value.image;
-      newRecipe.description = value.description;
+        newRecipe.menu = findMenu;
+        newRecipe.image = value.image;
+        newRecipe.description = value.description;
 
-      return newRecipe;
-    });
-
-    await this.recipeRepository.insert(insertRecipe);
+        await this.recipeRepository.insert(newRecipe);
+      }),
+    );
 
     const postRecipesResDTO = new RecipeDTO.PostRecipesResDTO();
 
@@ -53,6 +53,33 @@ export class RecipeService {
     result.code = HttpStatus.OK;
     result.message = '';
     result.payload = postRecipesResDTO;
+
+    return result;
+  }
+
+  async putRecipes(
+    menuId: number,
+    PutRecipesReqBodyDTO: RecipeDTO.PutRecipesReqBodyDTO,
+  ) {
+    const result = new ModelDTO.ResponseDTO();
+
+    const findMenu = await this.menusRepository.findOne(menuId);
+
+    if (findMenu) {
+      await this.recipeRepository.delete({ menu: findMenu });
+      const postRecipesResult = await this.postRecipes(
+        menuId,
+        PutRecipesReqBodyDTO,
+      );
+
+      result.message = postRecipesResult.message;
+      result.payload = postRecipesResult.payload;
+    } else {
+      result.message = '[Error] Menu Not Found.';
+      result.payload = 'null';
+    }
+
+    result.code = HttpStatus.OK;
 
     return result;
   }
