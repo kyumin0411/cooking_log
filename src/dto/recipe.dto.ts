@@ -5,6 +5,11 @@ class PostRecipeDTO extends PartialType(
   PickType(RecipeDTO, ['image', 'description']),
 ) {}
 
+export class RecipesResDTO extends RecipesDTO {
+  @ApiProperty({ description: '레시피 총 개수' })
+  total: number;
+}
+
 export class PostRecipesReqBodyDTO {
   @ApiProperty({
     description: '레시피',
@@ -29,10 +34,8 @@ export class PostRecipesReqBodyDTO {
   recipes: PostRecipeDTO[];
 }
 
-export class PostRecipesResDTO extends RecipesDTO {
-  @ApiProperty({ description: '레시피 총 개수' })
-  total: number;
-}
+export class PostRecipesResDTO extends RecipesResDTO {}
+
 export class PutRecipesReqBodyDTO {
   @ApiProperty({
     description: '레시피',
@@ -56,4 +59,6 @@ export class PutRecipesReqBodyDTO {
   })
   recipes: PostRecipeDTO[];
 }
-export class PutRecipesResDTO extends PostRecipesResDTO {}
+export class PutRecipesResDTO extends RecipesResDTO {}
+
+export class GetRecipesResDTO extends RecipesResDTO {}

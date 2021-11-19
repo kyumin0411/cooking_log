@@ -65,4 +65,25 @@ export class RecipeController {
     const result = await this.recipeService.putRecipes(menuId, body);
     res.status(result.code).json(result);
   }
+
+  @Get('/:menuId')
+  @ApiOperation({ summary: '레시피 조회' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: RecipeDTO.GetRecipesResDTO,
+    description: '',
+  })
+  @ApiParam({
+    name: 'menuId',
+    type: 'number',
+    description: '레시피를 조회할 메뉴 아이디',
+  })
+  async getRecipes(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('menuId') menuId: number,
+  ) {
+    const result = await this.recipeService.getRecipes(menuId);
+    res.status(result.code).json(result);
+  }
 }

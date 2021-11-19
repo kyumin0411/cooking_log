@@ -83,4 +83,32 @@ export class RecipeService {
 
     return result;
   }
+
+  async getRecipes(menuId: number) {
+    const result = new ModelDTO.ResponseDTO();
+
+    const findMenu = await this.menusRepository.findOne(menuId);
+
+    if (findMenu) {
+      const findRecipes = await this.recipeRepository.findAndCount({
+        menu: findMenu,
+      });
+
+      const getRecipesResDTO = new RecipeDTO.GetRecipesResDTO();
+
+      getRecipesResDTO.total = findRecipes[1];
+      getRecipesResDTO.menuId = menuId;
+      getRecipesResDTO.recipes = findRecipes[0];
+
+      result.message = '';
+      result.payload = getRecipesResDTO;
+    } else {
+      result.message = '[Error] Menu Not Found.';
+      result.payload = null;
+    }
+
+    result.code = HttpStatus.OK;
+
+    return result;
+  }
 }
