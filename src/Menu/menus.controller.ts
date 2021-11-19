@@ -4,7 +4,9 @@ import {
   Get,
   HttpStatus,
   Param,
+  Patch,
   Post,
+  Query,
   Req,
   Res,
 } from '@nestjs/common';
@@ -64,6 +66,28 @@ export class MenuController {
     @Param('menuId') menuId: string,
   ) {
     const result = await this.menuService.getMenu(menuId);
+    res.status(result.code).json(result);
+  }
+
+  @Patch('/update/:menuId')
+  @ApiOperation({ summary: '메뉴 수정' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: MenuDTO.PatchMenuResDTO,
+    description: '',
+  })
+  @ApiParam({
+    name: 'menuId',
+    type: 'string',
+    description: '수정할 메뉴 아이디',
+  })
+  async patchMenu(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('menuId') menuId: string,
+    @Query() query: MenuDTO.PatchMenuReqDTO,
+  ) {
+    const result = await this.menuService.patchMenu(menuId, query);
     res.status(result.code).json(result);
   }
 }

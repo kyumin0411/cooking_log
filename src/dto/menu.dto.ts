@@ -9,6 +9,18 @@ export class PostMenuBodyDTO extends PickType(MenuDTO, [
 
 export class PostMenuResDTO extends MenuDTO {}
 
+export class PatchMenuReqDTO extends PartialType(
+  PickType(MenuDTO, [
+    'title',
+    'image',
+    'difficulty',
+    'bookmark',
+    'ingredients',
+  ]),
+) {}
+
+export class PatchMenuResDTO extends MenuDTO {}
+
 export class GetMenusResDTO {
   @ApiProperty({ description: '등록된 메뉴 개수' })
   total: number;

@@ -108,12 +108,65 @@ export class MenuService {
       result.message = '';
       result.payload = getMenuResDTO;
     } else {
-      result.message = 'Menu Not Found.';
+      result.message = '[Error] Menu Not Found.';
       result.payload = null;
     }
 
     result.code = HttpStatus.OK;
 
+    return result;
+  }
+  async patchMenu(menuId: string, patchMenuReqDTO: MenuDTO.PatchMenuReqDTO) {
+    const result = new ModelDTO.ResponseDTO();
+
+    const { title, image, difficulty, bookmark, ingredients } = patchMenuReqDTO;
+
+    const findMenu = await this.menusRepository.findOne(menuId);
+
+    if (findMenu) {
+      await this.menusRepository
+        .createQueryBuilder('Menu')
+        .update({
+          title: title ?? findMenu.title,
+          image: image ?? findMenu.image,
+          difficulty: difficulty ?? findMenu.difficulty,
+          bookmark: bookmark ?? findMenu.bookmark,
+          ingredients: ingredients
+            ? ingredients.join(',')
+            : findMenu.ingredients,
+        })
+        .where({ id: menuId })
+        .execute();
+
+      const checkUpdateResult = await this.menusRepository.findOne(menuId);
+
+      if (checkUpdateResult) {
+        const patchMenuResDTO = new MenuDTO.PatchMenuResDTO();
+        patchMenuResDTO.id = checkUpdateResult.id;
+        patchMenuResDTO.createdAt = moment(checkUpdateResult.createdAt).format(
+          'YYYY-MM-DDTHH:mm:ss',
+        );
+        patchMenuResDTO.updatedAt = moment(checkUpdateResult.updatedAt).format(
+          'YYYY-MM-DDTHH:mm:ss',
+        );
+        patchMenuResDTO.title = checkUpdateResult.title;
+        patchMenuResDTO.image = checkUpdateResult.image;
+        patchMenuResDTO.bookmark = checkUpdateResult.bookmark;
+        patchMenuResDTO.difficulty = checkUpdateResult.difficulty;
+        patchMenuResDTO.ingredients = checkUpdateResult.ingredients.split(',');
+
+        result.message = '';
+        result.payload = patchMenuResDTO;
+      } else {
+        result.message = '[Error] Update Process Has Problem.';
+        result.payload = null;
+      }
+    } else {
+      result.message = '[Error] Menu Not Found.';
+      result.payload = null;
+    }
+
+    result.code = HttpStatus.OK;
     return result;
   }
 }
