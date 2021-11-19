@@ -169,4 +169,22 @@ export class MenuService {
     result.code = HttpStatus.OK;
     return result;
   }
+  async deleteMenu(menuId: string) {
+    const result = new ModelDTO.ResponseDTO();
+
+    const findMenu = await this.menusRepository.findOne(menuId);
+
+    if (findMenu) {
+      await this.menusRepository.delete(menuId);
+
+      result.message = 'Delete Menu Success.';
+    } else {
+      result.message = '[Error] Menu Not Found.';
+    }
+
+    result.code = HttpStatus.OK;
+    result.payload = null;
+
+    return result;
+  }
 }

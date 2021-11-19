@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Param,
@@ -88,6 +89,27 @@ export class MenuController {
     @Query() query: MenuDTO.PatchMenuReqDTO,
   ) {
     const result = await this.menuService.patchMenu(menuId, query);
+    res.status(result.code).json(result);
+  }
+
+  @Delete('/delete/:menuId')
+  @ApiOperation({ summary: '메뉴 삭제' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: '',
+    description: '',
+  })
+  @ApiParam({
+    name: 'menuId',
+    type: 'string',
+    description: '삭제할 메뉴 아이디',
+  })
+  async deleteMenu(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('menuId') menuId: string,
+  ) {
+    const result = await this.menuService.deleteMenu(menuId);
     res.status(result.code).json(result);
   }
 }
