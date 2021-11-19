@@ -42,6 +42,6 @@ export class RecipeDTO {
 export class RecipesDTO {
   @ApiProperty({ description: '메뉴 아이디' })
   menuId: number;
-  @ApiProperty({ description: '레시피 과정' })
+  @ApiProperty({ description: '레시피 과정', type: RecipeDTO, isArray: true })
   recipes: RecipeDTO[];
 }
