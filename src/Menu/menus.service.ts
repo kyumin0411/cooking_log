@@ -58,7 +58,7 @@ export class MenuService {
   async getMenus(getMenusReqDTO: MenuDTO.GetMenusReqDTO) {
     const result = new ModelDTO.ResponseDTO();
 
-    const { title, ingredients } = getMenusReqDTO;
+    const { title, ingredients, bookmark } = getMenusReqDTO;
 
     const findQuery = [];
 
@@ -77,6 +77,10 @@ export class MenuService {
           findQuery.push(`ingredients LIKE '%${ingredient}%'`);
         });
       }
+    }
+
+    if (bookmark) {
+      findQuery.push(`bookmark = 1`);
     }
     const findQueryString = findQuery.join(' AND ');
     const getMenus = await this.menusRepository
@@ -144,7 +148,8 @@ export class MenuService {
   async patchMenu(menuId: string, patchMenuReqDTO: MenuDTO.PatchMenuReqDTO) {
     const result = new ModelDTO.ResponseDTO();
 
-    const { title, image, difficulty, bookmark, ingredients } = patchMenuReqDTO;
+    const { title, image, difficulty, changeBookmark, ingredients } =
+      patchMenuReqDTO;
 
     const findMenu = await this.menusRepository.findOne(menuId);
 
@@ -155,7 +160,11 @@ export class MenuService {
           title: title ?? findMenu.title,
           image: image ?? findMenu.image,
           difficulty: difficulty ?? findMenu.difficulty,
-          bookmark: bookmark ?? findMenu.bookmark,
+          bookmark: changeBookmark
+            ? changeBookmark === 'true'
+              ? !findMenu.bookmark
+              : findMenu.bookmark
+            : findMenu.bookmark,
           ingredients: ingredients
             ? ingredients.join(',')
             : findMenu.ingredients,
