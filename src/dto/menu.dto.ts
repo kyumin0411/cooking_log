@@ -24,12 +24,18 @@ export class PatchMenuResDTO extends MenuDTO {}
 export class GetMenusReqDTO {
   @ApiProperty({ description: '검색할 요리 제목', required: false })
   title?: string;
+  @ApiProperty({
+    description: '요리 재료로 검색',
+    required: false,
+    isArray: true,
+  })
+  ingredients?: string[];
 }
 
 export class GetMenusResDTO {
   @ApiProperty({ description: '등록된 메뉴 개수' })
   total: number;
-  @ApiProperty({ description: '메뉴 데이터' })
+  @ApiProperty({ description: '메뉴 데이터', type: MenuDTO, isArray: true })
   menus: MenuDTO[];
 }
 

@@ -3,7 +3,7 @@ import * as ModelDTO from '../dto/model.dto';
 import * as MenuDTO from '../dto/menu.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Menu } from 'src/entity';
-import { Like, Repository } from 'typeorm';
+import { Any, In, Like, Repository } from 'typeorm';
 
 const moment = require('moment');
 
@@ -58,16 +58,37 @@ export class MenuService {
   async getMenus(getMenusReqDTO: MenuDTO.GetMenusReqDTO) {
     const result = new ModelDTO.ResponseDTO();
 
-    const { title } = getMenusReqDTO;
+    const { title, ingredients } = getMenusReqDTO;
 
     const findQuery = {};
+
+    const inQuery = [];
     if (title) {
       findQuery['title'] = Like(`%${title}%`);
     }
 
+    if (ingredients) {
+      if (typeof ingredients === 'string') {
+        inQuery.push(`%${ingredients}%`);
+      } else {
+        ingredients.forEach((ingredient) => {
+          inQuery.push(`%${ingredient}%`);
+        });
+      }
+      findQuery['ingredients'] = Like(In(inQuery));
+    }
     const getMenus = await this.menusRepository.find({
-      where: findQuery,
+      ingredients: Like(In(['%허브%', '%토마토%', '%우유%'])),
     });
+
+    const testMenus = await this.menusRepository
+      .createQueryBuilder()
+      .where('ingredients LIKE :one OR :two OR :three', {
+        one: '%허브%',
+        two: '%토마토%',
+        three: '%우유%',
+      })
+      .getMany();
 
     const getMenusPayload = new MenuDTO.GetMenusResDTO();
 
