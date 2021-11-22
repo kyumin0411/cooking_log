@@ -14,12 +14,16 @@ import {
 import { Response, Request } from 'express';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MenuService } from './menus.service';
+import { RecipeService } from 'src/Recipe/recipe.service';
 import * as MenuDTO from '../dto/menu.dto';
 
 @ApiTags('Menus: 메뉴 데이터 관리')
 @Controller('menus')
 export class MenuController {
-  constructor(private readonly menuService: MenuService) {}
+  constructor(
+    private readonly menuService: MenuService,
+    private readonly recipeService: RecipeService,
+  ) {}
 
   @Post('/create')
   @ApiOperation({ summary: '메뉴 생성' })
@@ -62,15 +66,19 @@ export class MenuController {
   })
   @ApiParam({
     name: 'menuId',
-    type: 'string',
+    type: 'number',
     description: '조회할 메뉴 아이디',
   })
   async getMenu(
     @Req() req: Request,
     @Res() res: Response,
-    @Param('menuId') menuId: string,
+    @Param('menuId') menuId: number,
   ) {
-    const result = await this.menuService.getMenu(menuId);
+    const getRecipesResult = await this.recipeService.getRecipes(menuId);
+    const result = await this.menuService.getMenu(
+      menuId,
+      getRecipesResult.payload,
+    );
     res.status(result.code).json(result);
   }
 
