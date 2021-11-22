@@ -31,11 +31,10 @@ export class GetMenusReqDTO {
   })
   ingredients?: string[];
   @ApiProperty({
-    description: '즐겨찾기로 검색 [ 1 : 즐겨찾기 된 메뉴만 조회 ]',
+    description: `즐겨찾기로 검색 [ 'true' : 즐겨찾기 된 메뉴만 조회 ]`,
     required: false,
-    default: 0,
   })
-  bookmark?: boolean;
+  bookmark?: string;
 }
 
 export class GetMenusResDTO {

@@ -79,7 +79,7 @@ export class MenuService {
       }
     }
 
-    if (bookmark) {
+    if (bookmark === 'true') {
       findQuery.push(`bookmark = 1`);
     }
     const findQueryString = findQuery.join(' AND ');
