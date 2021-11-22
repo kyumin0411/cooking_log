@@ -3,7 +3,7 @@ import * as ModelDTO from '../dto/model.dto';
 import * as MenuDTO from '../dto/menu.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Menu } from 'src/entity';
-import { Any, In, Like, Repository } from 'typeorm';
+import { In, Like, Repository } from 'typeorm';
 
 const moment = require('moment');
 
@@ -114,7 +114,7 @@ export class MenuService {
     return result;
   }
 
-  async getMenu(menuId: string) {
+  async getMenu(menuId: number, recipes: ModelDTO.RecipesDTO) {
     const result = new ModelDTO.ResponseDTO();
 
     const findMenu = await this.menusRepository.findOne(menuId);
@@ -134,7 +134,7 @@ export class MenuService {
       getMenuResDTO.difficulty = findMenu.difficulty;
       getMenuResDTO.bookmark = findMenu.bookmark;
       getMenuResDTO.ingredients = findMenu.ingredients.split(',');
-      // getMenuResDTO.recipes = ;
+      getMenuResDTO.recipes = recipes.recipes;
 
       result.message = '';
       result.payload = getMenuResDTO;
