@@ -86,4 +86,25 @@ export class RecipeController {
     const result = await this.recipeService.getRecipes(menuId);
     res.status(result.code).json(result);
   }
+
+  @Delete('/:recipeId')
+  @ApiOperation({ summary: '레시피 삭제' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: '',
+    description: '',
+  })
+  @ApiParam({
+    name: 'recipeId',
+    type: 'number',
+    description: '삭제할 레시피 아이디',
+  })
+  async deleteRecipe(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('recipeId') recipeId: number,
+  ) {
+    const result = await this.recipeService.deleteRecipe(recipeId);
+    res.status(result.code).json(result);
+  }
 }
