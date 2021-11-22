@@ -111,4 +111,22 @@ export class RecipeService {
 
     return result;
   }
+
+  async deleteRecipe(recipeId: number) {
+    const result = new ModelDTO.ResponseDTO();
+
+    const findRecipe = await this.recipeRepository.findOne(recipeId);
+
+    if (findRecipe) {
+      await this.recipeRepository.delete(recipeId);
+      result.message = 'Delete Recipe Success.';
+    } else {
+      result.message = '[Error] Recipe Not Found.';
+    }
+
+    result.code = HttpStatus.OK;
+    result.payload = null;
+
+    return result;
+  }
 }
