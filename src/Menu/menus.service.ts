@@ -60,34 +60,28 @@ export class MenuService {
 
     const { title, ingredients } = getMenusReqDTO;
 
-    const findQuery = {};
+    const findQuery = [];
 
     const inQuery = [];
     if (title) {
-      findQuery['title'] = Like(`%${title}%`);
+      findQuery.push(`title LIKE '%${title}%'`);
     }
 
     if (ingredients) {
       if (typeof ingredients === 'string') {
-        inQuery.push(`%${ingredients}%`);
+        inQuery.push(Like(`%${ingredients}%`));
+        findQuery.push(`ingredients LIKE '%${ingredients}%'`);
       } else {
         ingredients.forEach((ingredient) => {
-          inQuery.push(`%${ingredient}%`);
+          inQuery.push(Like(`%${ingredient}%`));
+          findQuery.push(`ingredients LIKE '%${ingredient}%'`);
         });
       }
-      findQuery['ingredients'] = Like(In(inQuery));
     }
-    const getMenus = await this.menusRepository.find({
-      ingredients: Like(In(['%허브%', '%토마토%', '%우유%'])),
-    });
-
-    const testMenus = await this.menusRepository
+    const findQueryString = findQuery.join(' AND ');
+    const getMenus = await this.menusRepository
       .createQueryBuilder()
-      .where('ingredients LIKE :one OR :two OR :three', {
-        one: '%허브%',
-        two: '%토마토%',
-        three: '%우유%',
-      })
+      .where(findQueryString, {})
       .getMany();
 
     const getMenusPayload = new MenuDTO.GetMenusResDTO();
