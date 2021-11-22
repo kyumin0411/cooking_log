@@ -58,36 +58,34 @@ export class MenuService {
   async getMenus(getMenusReqDTO: MenuDTO.GetMenusReqDTO) {
     const result = new ModelDTO.ResponseDTO();
 
-    const { title, ingredients } = getMenusReqDTO;
+    const { title, ingredients, bookmark } = getMenusReqDTO;
 
-    const findQuery = {};
+    const findQuery = [];
 
     const inQuery = [];
     if (title) {
-      findQuery['title'] = Like(`%${title}%`);
+      findQuery.push(`title LIKE '%${title}%'`);
     }
 
     if (ingredients) {
       if (typeof ingredients === 'string') {
-        inQuery.push(`%${ingredients}%`);
+        inQuery.push(Like(`%${ingredients}%`));
+        findQuery.push(`ingredients LIKE '%${ingredients}%'`);
       } else {
         ingredients.forEach((ingredient) => {
-          inQuery.push(`%${ingredient}%`);
+          inQuery.push(Like(`%${ingredient}%`));
+          findQuery.push(`ingredients LIKE '%${ingredient}%'`);
         });
       }
-      findQuery['ingredients'] = Like(In(inQuery));
     }
-    const getMenus = await this.menusRepository.find({
-      ingredients: Like(In(['%허브%', '%토마토%', '%우유%'])),
-    });
 
-    const testMenus = await this.menusRepository
+    if (bookmark === 'true') {
+      findQuery.push(`bookmark = 1`);
+    }
+    const findQueryString = findQuery.join(' AND ');
+    const getMenus = await this.menusRepository
       .createQueryBuilder()
-      .where('ingredients LIKE :one OR :two OR :three', {
-        one: '%허브%',
-        two: '%토마토%',
-        three: '%우유%',
-      })
+      .where(findQueryString, {})
       .getMany();
 
     const getMenusPayload = new MenuDTO.GetMenusResDTO();
@@ -150,7 +148,8 @@ export class MenuService {
   async patchMenu(menuId: string, patchMenuReqDTO: MenuDTO.PatchMenuReqDTO) {
     const result = new ModelDTO.ResponseDTO();
 
-    const { title, image, difficulty, bookmark, ingredients } = patchMenuReqDTO;
+    const { title, image, difficulty, changeBookmark, ingredients } =
+      patchMenuReqDTO;
 
     const findMenu = await this.menusRepository.findOne(menuId);
 
@@ -161,7 +160,11 @@ export class MenuService {
           title: title ?? findMenu.title,
           image: image ?? findMenu.image,
           difficulty: difficulty ?? findMenu.difficulty,
-          bookmark: bookmark ?? findMenu.bookmark,
+          bookmark: changeBookmark
+            ? changeBookmark === 'true'
+              ? !findMenu.bookmark
+              : findMenu.bookmark
+            : findMenu.bookmark,
           ingredients: ingredients
             ? ingredients.join(',')
             : findMenu.ingredients,
