@@ -3,7 +3,7 @@ import * as ModelDTO from '../dto/model.dto';
 import * as MenuDTO from '../dto/menu.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Menu } from 'src/entity';
-import { In, Like, Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 const moment = require('moment');
 
