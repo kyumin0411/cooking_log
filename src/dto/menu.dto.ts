@@ -13,7 +13,7 @@ export class PatchMenuReqDTO extends PartialType(
   PickType(MenuDTO, ['title', 'image', 'difficulty', 'ingredients']),
 ) {
   @ApiProperty({
-    description: `즐겨찾기 switch [ 'true' : 즐겨찾기 switch, 'false' : 그대로 ]`,
+    description: `즐겨찾기 switch [ 'true' : bookmark change, 'false' : 그대로 ]`,
     required: false,
   })
   changeBookmark?: string;
