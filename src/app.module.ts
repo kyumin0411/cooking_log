@@ -4,12 +4,14 @@ import { Menu, Recipe } from 'src/entity';
 import { MenuModule } from 'src/Menu/menus.module';
 import { RecipeModule } from 'src/Recipe/recipe.module';
 import { ConfigModule } from '@nestjs/config';
+import { ImageModule } from './image/image.module';
 import * as Joi from 'joi';
 
 @Module({
   imports: [
     MenuModule,
     RecipeModule,
+    ImageModule,
     ConfigModule.forRoot({
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
       isGlobal: true,
@@ -34,6 +36,7 @@ import * as Joi from 'joi';
       synchronize: false,
       autoLoadEntities: true,
     }),
+    ImageModule,
   ],
   controllers: [],
   providers: [],
