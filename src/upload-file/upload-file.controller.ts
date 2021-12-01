@@ -40,7 +40,7 @@ export class UploadFileController {
     FileInterceptor('image', {
       storage: multerS3({
         s3: s3,
-        bucket: 'cookinglog',
+        bucket: process.env.AWS_S3_BUCKET_NAME ?? '',
         acl: 'private',
         key: function (request, image, cb) {
           cb(null, `${Date.now().toString()}-${image.originalname}`);
