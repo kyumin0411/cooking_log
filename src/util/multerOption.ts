@@ -5,7 +5,7 @@ import uuidRandom from 'src/util/uuidRandom';
 
 export const multerOptions = {
   fileFilter: (request, file, callback) => {
-    if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+    if (file.mimetype.match(/\/(jpg|jpeg|png|svg)$/)) {
       callback(null, true);
     } else {
       callback(new HttpError(400, '지원하지 않는 이미지 형식입니다.'), false);

@@ -1,0 +1,60 @@
+import {
+  Body,
+  Controller,
+  Post,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import * as AWS from 'aws-sdk';
+import * as multerS3 from 'multer-s3';
+import { UploadFileService } from 'src/upload-file/upload-file.service';
+import { PostImagesBodyDTO } from 'src/dto/image.dto';
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
+@ApiTags('Files: 이미지 파일 관리')
+@Controller('files')
+export class UploadFileController {
+  constructor(private readonly uploadFileService: UploadFileService) {}
+
+  @Post()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: multerS3({
+        s3: s3,
+        bucket: process.env.AWS_S3_BUCKET_NAME ?? '',
+        acl: 'public-read',
+        key: function (request, file, cb) {
+          cb(null, `${Date.now().toString()}-${file.originalname}`);
+        },
+      }),
+      limits: {},
+    }),
+  )
+  async uploadFile(
+    @UploadedFiles() file: Express.Multer.File,
+    @Body() body: Express.Multer.File,
+  ) {
+    console.log(file);
+    console.log(body);
+    return await this.uploadFileService.uploadFile(file);
+  }
+}
