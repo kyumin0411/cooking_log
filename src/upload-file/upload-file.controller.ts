@@ -1,0 +1,59 @@
+import {
+  Controller,
+  Post,
+  Res,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import * as AWS from 'aws-sdk';
+import * as multerS3 from 'multer-s3';
+import { UploadFileService } from 'src/upload-file/upload-file.service';
+import { Response } from 'express';
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
+@ApiTags('Images: 이미지 파일 관리')
+@Controller('image')
+export class UploadFileController {
+  constructor(private readonly uploadFileService: UploadFileService) {}
+
+  @Post()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: multerS3({
+        s3: s3,
+        bucket: 'cookinglog',
+        acl: 'private',
+        key: function (request, image, cb) {
+          cb(null, `${Date.now().toString()}-${image.originalname}`);
+        },
+      }),
+      limits: {},
+    }),
+  )
+  async createImageUrl(
+    @Res() res: Response,
+    @UploadedFile() image: Express.MulterS3.File,
+  ) {
+    const result = await this.uploadFileService.createImageUrl(image);
+    res.status(result.code).json(result);
+  }
+}

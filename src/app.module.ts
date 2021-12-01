@@ -4,12 +4,14 @@ import { Menu, Recipe } from 'src/entity';
 import { MenuModule } from 'src/Menu/menus.module';
 import { RecipeModule } from 'src/Recipe/recipe.module';
 import { ConfigModule } from '@nestjs/config';
+import { UploadFileModule } from './upload-file/upload-file.module';
 import * as Joi from 'joi';
 
 @Module({
   imports: [
     MenuModule,
     RecipeModule,
+    UploadFileModule,
     ConfigModule.forRoot({
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
       isGlobal: true,
