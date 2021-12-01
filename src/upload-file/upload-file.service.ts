@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as AWS from 'aws-sdk';
 import { UploadFile } from 'src/entity';
 import { Repository } from 'typeorm';
-import { PostImagesBodyDTO } from 'src/dto/image.dto';
+import { PostImagesBodyDTO, PostImageBodyDTO } from 'src/dto/image.dto';
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -18,9 +18,9 @@ export class UploadFileService {
     private uploadFileRepository: Repository<UploadFile>,
   ) {}
 
-  async uploadFile(files: Express.Multer.File) {
+  async uploadFile(image: Express.MulterS3.File) {
     const uploadfiles = [];
-    console.log(files);
+    console.log(image);
     // const files = postImagesBodyDTO.files;
     // if (typeof files === 'object') {
     //   for (const element of files) {

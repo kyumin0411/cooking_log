@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Image } from 'aws-sdk/clients/iotanalytics';
+import FormData from 'form-data';
 
 export class PostImagesBodyDTO {
   @ApiProperty({
@@ -7,9 +8,9 @@ export class PostImagesBodyDTO {
     type: 'formdata',
     isArray: true,
   })
-  files: FormData[];
+  images: FormData[];
 }
 export class PostImageBodyDTO {
   @ApiProperty({ description: '업로드할 파일', type: 'formdata' })
-  file: Image;
+  image: FormData;
 }

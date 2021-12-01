@@ -10,7 +10,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import * as AWS from 'aws-sdk';
 import * as multerS3 from 'multer-s3';
 import { UploadFileService } from 'src/upload-file/upload-file.service';
-import { PostImagesBodyDTO } from 'src/dto/image.dto';
+import { PostImagesBodyDTO, PostImageBodyDTO } from 'src/dto/image.dto';
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -29,7 +29,7 @@ export class UploadFileController {
     schema: {
       type: 'object',
       properties: {
-        file: {
+        image: {
           type: 'string',
           format: 'binary',
         },
@@ -40,21 +40,20 @@ export class UploadFileController {
     FileInterceptor('image', {
       storage: multerS3({
         s3: s3,
-        bucket: process.env.AWS_S3_BUCKET_NAME ?? '',
-        acl: 'public-read',
-        key: function (request, file, cb) {
-          cb(null, `${Date.now().toString()}-${file.originalname}`);
+        bucket: 'cookinglog',
+        acl: 'public-read-write',
+        key: function (request, image, cb) {
+          var ext = image.mimetype.split('/')[1];
+          if (!['png', 'jpg', 'jpeg', 'gif', 'bmp'].includes(ext)) {
+            return cb(new Error('Only images are allowed'));
+          } else cb(null, `${Date.now().toString()}-${image.originalname}`);
         },
       }),
       limits: {},
     }),
   )
-  async uploadFile(
-    @UploadedFiles() file: Express.Multer.File,
-    @Body() body: Express.Multer.File,
-  ) {
-    console.log(file);
-    console.log(body);
-    return await this.uploadFileService.uploadFile(file);
+  async uploadFile(@UploadedFiles() image: Express.MulterS3.File) {
+    console.log(image);
+    return await this.uploadFileService.uploadFile(image);
   }
 }
