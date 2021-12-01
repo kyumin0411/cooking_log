@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Menu, Recipe, UploadFile } from 'src/entity';
+import { Menu, Recipe } from 'src/entity';
 import { MenuModule } from 'src/Menu/menus.module';
 import { RecipeModule } from 'src/Recipe/recipe.module';
 import { ConfigModule } from '@nestjs/config';
@@ -31,12 +31,11 @@ import * as Joi from 'joi';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Menu, Recipe, UploadFile],
+      entities: [Menu, Recipe],
       migrations: ['migrations/*{.ts,.js}'],
       synchronize: false,
       autoLoadEntities: true,
     }),
-    UploadFileModule,
   ],
   controllers: [],
   providers: [],

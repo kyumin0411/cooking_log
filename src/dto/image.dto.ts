@@ -14,3 +14,8 @@ export class PostImageBodyDTO {
   @ApiProperty({ description: '업로드할 파일', type: 'formdata' })
   image: FormData;
 }
+
+export class PostImageResDTO {
+  @ApiProperty({ description: '업로드 파일 url' })
+  url: String;
+}

@@ -5,10 +5,8 @@ import {
   Get,
   HttpStatus,
   Param,
-  Patch,
   Post,
   Put,
-  Query,
   Req,
   Res,
 } from '@nestjs/common';
