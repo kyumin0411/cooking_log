@@ -4,7 +4,7 @@ import * as ImageDTO from 'src/dto/image.dto';
 
 @Injectable()
 export class UploadFileService {
-  async createImageUrl(image: Express.MulterS3.File) {
+  async uploadFile(image: Express.MulterS3.File) {
     const result = new ModelDTO.ResponseDTO();
 
     const imageUrl = new ImageDTO.PostImageResDTO();

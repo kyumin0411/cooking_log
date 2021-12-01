@@ -18,8 +18,8 @@ const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
 });
 
-@ApiTags('Images: 이미지 파일 관리')
-@Controller('image')
+@ApiTags('Files: 이미지 파일 관리')
+@Controller('files')
 export class UploadFileController {
   constructor(private readonly uploadFileService: UploadFileService) {}
 
@@ -49,11 +49,11 @@ export class UploadFileController {
       limits: {},
     }),
   )
-  async createImageUrl(
+  async uploadFile(
     @Res() res: Response,
     @UploadedFile() image: Express.MulterS3.File,
   ) {
-    const result = await this.uploadFileService.createImageUrl(image);
+    const result = await this.uploadFileService.uploadFile(image);
     res.status(result.code).json(result);
   }
 }
