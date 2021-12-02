@@ -52,11 +52,11 @@ export class UserService {
 
     const getUsersResDTO = new UserDTO.GetUsersResDTO();
 
-    const userFindAndCount = this.userRepository.findAndCount({
+    const userFindAndCount = await this.userRepository.findAndCount({
       select: ['userId', 'userName'],
     });
-    getUsersResDTO.total = userFindAndCount[0];
-    getUsersResDTO.users = userFindAndCount[1];
+    getUsersResDTO.total = userFindAndCount[1];
+    getUsersResDTO.users = userFindAndCount[0];
 
     result.code = HttpStatus.OK;
     result.message = '';

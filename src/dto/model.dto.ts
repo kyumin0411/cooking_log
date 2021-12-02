@@ -53,6 +53,11 @@ export class UserDTO {
   userName: string;
   @ApiProperty({ description: '비밀번호' })
   password: string;
-  // @ApiProperty({ description: 'role' })
-  // role: string;
+}
+
+export class LoginDTO {
+  @ApiProperty({ description: '유저 아이디' })
+  userId: string;
+  @ApiProperty({ description: '비밀번호' })
+  password: string;
 }
