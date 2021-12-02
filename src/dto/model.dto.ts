@@ -45,3 +45,19 @@ export class RecipesDTO {
   @ApiProperty({ description: '레시피 과정', type: RecipeDTO, isArray: true })
   recipes: RecipeDTO[];
 }
+
+export class UserDTO {
+  @ApiProperty({ description: '유저 아이디' })
+  userId: string;
+  @ApiProperty({ description: '유저 이름' })
+  userName: string;
+  @ApiProperty({ description: '비밀번호' })
+  password: string;
+}
+
+export class LoginDTO {
+  @ApiProperty({ description: '유저 아이디' })
+  userId: string;
+  @ApiProperty({ description: '비밀번호' })
+  password: string;
+}
