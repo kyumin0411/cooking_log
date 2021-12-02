@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Menu, Recipe } from 'src/entity';
+import { Menu, Recipe, User } from 'src/entity';
 import { MenuModule } from 'src/Menu/menus.module';
 import { RecipeModule } from 'src/Recipe/recipe.module';
 import { ConfigModule } from '@nestjs/config';
 import { UploadFileModule } from './upload-file/upload-file.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -12,6 +14,8 @@ import * as Joi from 'joi';
     MenuModule,
     RecipeModule,
     UploadFileModule,
+    AuthModule,
+    UserModule,
     ConfigModule.forRoot({
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
       isGlobal: true,
@@ -31,7 +35,7 @@ import * as Joi from 'joi';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Menu, Recipe],
+      entities: [Menu, Recipe, User],
       migrations: ['migrations/*{.ts,.js}'],
       synchronize: false,
       autoLoadEntities: true,

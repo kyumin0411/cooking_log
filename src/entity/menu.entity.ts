@@ -4,12 +4,15 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
-
+import { User } from 'src/entity';
 @Entity()
 export class Menu {
   @PrimaryGeneratedColumn()
   id: number;
+  @ManyToOne((type) => User, (user) => user.userId)
+  user: User;
   @CreateDateColumn()
   createdAt: string;
   @UpdateDateColumn()
