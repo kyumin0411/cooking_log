@@ -11,7 +11,7 @@
     "migrationsDir": "src/migration"
   },
   "migrationsRun": true,
-  "migrations": ["dist/migrations/*{.ts,.js}"],
+  "migrations": ["dist/src/migration/*{.ts,.js}"],
   "synchronize": false,
   "autoLoadEntities": true
 }
