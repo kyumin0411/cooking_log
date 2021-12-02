@@ -8,6 +8,4 @@ export class User {
   userName: string;
   @Column()
   password: string;
-  // @Column()
-  // role: string;
 }

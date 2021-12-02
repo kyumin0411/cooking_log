@@ -11,11 +11,6 @@ import * as Joi from 'joi';
 
 @Module({
   imports: [
-    MenuModule,
-    RecipeModule,
-    UploadFileModule,
-    AuthModule,
-    UserModule,
     ConfigModule.forRoot({
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
       isGlobal: true,
@@ -38,9 +33,14 @@ import * as Joi from 'joi';
       entities: [Menu, Recipe, User],
       migrations: ['src/migration/*.{ts,js}'],
       migrationsRun: false,
-      synchronize: false,
+      synchronize: true,
       autoLoadEntities: true,
     }),
+    MenuModule,
+    RecipeModule,
+    UploadFileModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],

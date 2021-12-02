@@ -10,8 +10,8 @@
     "entitiesDir": "src/entity",
     "migrationsDir": "src/migration"
   },
-  "migrationsRun": true,
+  "migrationsRun": false,
   "migrations": ["dist/src/migration/*{.ts,.js}"],
-  "synchronize": false,
+  "synchronize": true,
   "autoLoadEntities": true
 }

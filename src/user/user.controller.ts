@@ -27,12 +27,12 @@ export class UserController {
     description: '',
   })
   async registerUser(
-    // @Req() req: Request,
-    // @Res() res: Response,
+    @Req() req: Request,
+    @Res() res: Response,
     @Body() createUserDTO: UserDTO.PostUserBodyDTO,
   ) {
     const result = await this.userService.registerUser(createUserDTO);
-    // res.status(result.code).json(result);
+    res.status(result.code).json(result);
   }
 
   @Get()

@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
 } from 'typeorm';
-import { User } from 'src/entity';
+import { User } from 'src/entity/user.entity';
 @Entity()
 export class Menu {
   @PrimaryGeneratedColumn()
