@@ -12,12 +12,19 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { MenuService } from './menus.service';
 import { RecipeService } from 'src/Recipe/recipe.service';
 import * as MenuDTO from '../dto/menu.dto';
 
 @ApiTags('Menus: 메뉴 데이터 관리')
+@ApiBearerAuth()
 @Controller('menus')
 export class MenuController {
   constructor(
@@ -37,6 +44,7 @@ export class MenuController {
     @Res() res: Response,
     @Body() body: MenuDTO.PostMenuBodyDTO,
   ) {
+    console.log(req.headers.authorization);
     const result = await this.menuService.postMenu(body);
     res.status(result.code).json(result);
   }
@@ -53,7 +61,10 @@ export class MenuController {
     @Res() res: Response,
     @Query() query: MenuDTO.GetMenusReqDTO,
   ) {
-    const result = await this.menuService.getMenus(query);
+    const result = await this.menuService.getMenus(
+      query,
+      req.headers.authorization,
+    );
     res.status(result.code).json(result);
   }
 

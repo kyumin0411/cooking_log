@@ -55,7 +55,7 @@ export class MenuService {
     return result;
   }
 
-  async getMenus(getMenusReqDTO: MenuDTO.GetMenusReqDTO) {
+  async getMenus(getMenusReqDTO: MenuDTO.GetMenusReqDTO, accessToken: string) {
     const result = new ModelDTO.ResponseDTO();
 
     const { title, ingredients, bookmark } = getMenusReqDTO;
