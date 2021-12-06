@@ -6,9 +6,9 @@ import * as AWS from 'aws-sdk';
 @Injectable()
 export class UploadFileService {
   s3 = new AWS.S3({
-    accessKeyId: 'AKIA2VXBQMY7P4HEDPAQ',
-    secretAccessKey: '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',
-    region: 'ap-northeast-2',
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
   });
   async uploadFile(image: Express.MulterS3.File) {
     const result = new ModelDTO.ResponseDTO();
