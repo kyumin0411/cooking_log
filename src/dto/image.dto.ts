@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Image } from 'aws-sdk/clients/iotanalytics';
 import FormData from 'form-data';
 
 export class PostImagesBodyDTO {
