@@ -5,6 +5,7 @@ import * as ModelDTO from 'src/dto/model.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { decodeAccessToken } from 'utils/token.manager';
 
 @Injectable()
 export class UserService {
@@ -85,8 +86,19 @@ export class UserService {
     return result;
   }
 
-  async deleteUser(userId: string) {
+  async deleteUser(accessToken: string) {
     const result = new ModelDTO.ResponseDTO();
+
+    const decodeToken = decodeAccessToken(accessToken);
+
+    if (!decodeToken) {
+      result.code = HttpStatus.OK;
+      result.message = '[Error]Token Invalid.';
+      result.payload = '';
+      return result;
+    }
+
+    const userId = decodeToken.userId;
 
     const findUser = this.userRepository.findOne(userId);
 

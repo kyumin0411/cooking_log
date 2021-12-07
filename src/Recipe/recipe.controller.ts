@@ -11,11 +11,18 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RecipeService } from './recipe.service';
 import * as RecipeDTO from '../dto/recipe.dto';
 
 @ApiTags('Recipes: 레시피 데이터 관리')
+@ApiBearerAuth()
 @Controller('recipes')
 export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}

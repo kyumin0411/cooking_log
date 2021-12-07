@@ -10,12 +10,19 @@ import {
   Query,
   Delete,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserService } from 'src/user/user.service';
 import * as UserDTO from 'src/dto/user.dto';
 import { Request, Response } from 'express';
 
 @ApiTags('Users: 유저 데이터 관리')
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -69,24 +76,15 @@ export class UserController {
     res.status(result.code).json(result);
   }
 
-  @Delete('/:userId')
+  @Delete()
   @ApiOperation({ summary: '회원 탈퇴' })
   @ApiResponse({
     status: HttpStatus.OK,
     type: '',
     description: '',
   })
-  @ApiParam({
-    name: 'userId',
-    type: 'string',
-    description: '삭제할 유저 아이디',
-  })
-  async deleteUser(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Param('userId') userId: string,
-  ) {
-    const result = await this.userService.deleteUser(userId);
+  async deleteUser(@Req() req: Request, @Res() res: Response) {
+    const result = await this.userService.deleteUser(req.headers.authorization);
     res.status(result.code).json(result);
   }
 }
