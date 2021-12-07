@@ -9,11 +9,13 @@ import {
   Param,
   Query,
   Delete,
+  Put,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -85,6 +87,31 @@ export class UserController {
   })
   async deleteUser(@Req() req: Request, @Res() res: Response) {
     const result = await this.userService.deleteUser(req.headers.authorization);
+    res.status(result.code).json(result);
+  }
+
+  @Put('/password')
+  @ApiOperation({ summary: '비밀번호 변경' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: '',
+    description: '',
+  })
+  @ApiQuery({
+    name: 'password',
+    type: 'string',
+    description: '변경할 비밀번호',
+  })
+  async updatePassword(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('password') password: string,
+  ) {
+    console.log(password);
+    const result = await this.userService.updatePassword(
+      req.headers.authorization,
+      password,
+    );
     res.status(result.code).json(result);
   }
 }

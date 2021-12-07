@@ -113,4 +113,34 @@ export class UserService {
     result.code = HttpStatus.OK;
     return result;
   }
+
+  async updatePassword(accessToken: string, password: string) {
+    const result = new ModelDTO.ResponseDTO();
+
+    const decodeToken = decodeAccessToken(accessToken);
+
+    if (!decodeToken) {
+      result.code = HttpStatus.OK;
+      result.message = '[Error]Token Invalid.';
+      result.payload = '';
+      return result;
+    }
+
+    const userId = decodeToken.userId;
+
+    const findUser = await this.userRepository.findOne(userId);
+
+    if (findUser) {
+      const newPassword = await bcrypt.hash(password, 10);
+
+      await this.userRepository.update(userId, { password: newPassword });
+      result.message = 'Update Password Success.';
+    } else {
+      result.message = '[Error] User Not Found.';
+    }
+
+    result.code = HttpStatus.OK;
+    result.payload = '';
+    return result;
+  }
 }
