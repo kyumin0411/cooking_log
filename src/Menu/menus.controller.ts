@@ -23,7 +23,7 @@ import { MenuService } from './menus.service';
 import { RecipeService } from 'src/Recipe/recipe.service';
 import * as MenuDTO from '../dto/menu.dto';
 
-@ApiTags('Menus: 메뉴 데이터 관리')
+@ApiTags('Menus: 메뉴 관리')
 @ApiBearerAuth()
 @Controller('menus')
 export class MenuController {

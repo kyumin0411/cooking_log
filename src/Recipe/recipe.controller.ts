@@ -21,7 +21,7 @@ import {
 import { RecipeService } from './recipe.service';
 import * as RecipeDTO from '../dto/recipe.dto';
 
-@ApiTags('Recipes: 레시피 데이터 관리')
+@ApiTags('Recipes: 레시피 관리')
 @ApiBearerAuth()
 @Controller('recipes')
 export class RecipeController {

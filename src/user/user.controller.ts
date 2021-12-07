@@ -23,7 +23,7 @@ import { UserService } from 'src/user/user.service';
 import * as UserDTO from 'src/dto/user.dto';
 import { Request, Response } from 'express';
 
-@ApiTags('Users: 유저 데이터 관리')
+@ApiTags('Users: 회원 관리')
 @ApiBearerAuth()
 @Controller('user')
 export class UserController {
@@ -46,7 +46,7 @@ export class UserController {
   }
 
   @Get()
-  @ApiOperation({ summary: '유저 전체 조회' })
+  @ApiOperation({ summary: '회원 전체 조회' })
   @ApiResponse({
     status: HttpStatus.OK,
     type: UserDTO.GetUsersResDTO,
@@ -58,7 +58,7 @@ export class UserController {
   }
 
   @Get('/:userId')
-  @ApiOperation({ summary: '유저 단일 조회' })
+  @ApiOperation({ summary: '회원 단일 조회' })
   @ApiResponse({
     status: HttpStatus.OK,
     type: UserDTO.GetUserResDTO,
