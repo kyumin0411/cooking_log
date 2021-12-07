@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Menu, User } from 'src/entity';
 import { Like, Repository } from 'typeorm';
 import { decodeAccessToken } from 'utils/token.manager';
+import { stringifyIngredients } from 'utils/menu.manager';
 
 const moment = require('moment');
 
@@ -37,7 +38,7 @@ export class MenuService {
     createdMenu.title = postMenuBodyDTO.title;
     createdMenu.difficulty = postMenuBodyDTO.difficulty;
     createdMenu.image = postMenuBodyDTO.image;
-    createdMenu.ingredients = postMenuBodyDTO.ingredients.join(',');
+    createdMenu.ingredients = stringifyIngredients(postMenuBodyDTO.ingredients);
     createdMenu.user = new User();
     createdMenu.user.userId = userId;
 
@@ -72,8 +73,19 @@ export class MenuService {
     return result;
   }
 
-  async getMenus(getMenusReqDTO: MenuDTO.GetMenusReqDTO, accessToken: string) {
+  async getMenus(accessToken: string, getMenusReqDTO: MenuDTO.GetMenusReqDTO) {
     const result = new ModelDTO.ResponseDTO();
+
+    const decodeToken = decodeAccessToken(accessToken);
+
+    if (!decodeToken) {
+      result.code = HttpStatus.OK;
+      result.message = '[Error]Token Invalid.';
+      result.payload = '';
+      return result;
+    }
+
+    const userId = decodeToken.userId;
 
     const { title, ingredients, bookmark } = getMenusReqDTO;
 
@@ -99,6 +111,7 @@ export class MenuService {
     if (bookmark === 'true') {
       findQuery.push(`bookmark = 1`);
     }
+    findQuery.push(`userUserId = '${userId}'`);
     const findQueryString = findQuery.join(' AND ');
     const getMenus = await this.menusRepository
       .createQueryBuilder()
@@ -129,10 +142,27 @@ export class MenuService {
     return result;
   }
 
-  async getMenu(menuId: number, recipes: ModelDTO.RecipesDTO) {
+  async getMenu(
+    accessToken: string,
+    menuId: number,
+    recipes: ModelDTO.RecipesDTO,
+  ) {
     const result = new ModelDTO.ResponseDTO();
 
-    const findMenu = await this.menusRepository.findOne(menuId);
+    const decodeToken = decodeAccessToken(accessToken);
+
+    if (!decodeToken) {
+      result.code = HttpStatus.OK;
+      result.message = '[Error]Token Invalid.';
+      result.payload = '';
+      return result;
+    }
+
+    const userId = decodeToken.userId;
+
+    const findMenu = await this.menusRepository.findOne({
+      where: { id: menuId, user: { userId: userId } },
+    });
 
     if (findMenu) {
       const getMenuResDTO = new MenuDTO.GetMenuResDTO();
@@ -162,13 +192,30 @@ export class MenuService {
 
     return result;
   }
-  async patchMenu(menuId: string, patchMenuReqDTO: MenuDTO.PatchMenuReqDTO) {
+  async patchMenu(
+    accessToken: string,
+    menuId: string,
+    patchMenuReqDTO: MenuDTO.PatchMenuReqDTO,
+  ) {
     const result = new ModelDTO.ResponseDTO();
+
+    const decodeToken = decodeAccessToken(accessToken);
+
+    if (!decodeToken) {
+      result.code = HttpStatus.OK;
+      result.message = '[Error]Token Invalid.';
+      result.payload = '';
+      return result;
+    }
+
+    const userId = decodeToken.userId;
 
     const { title, image, difficulty, changeBookmark, ingredients } =
       patchMenuReqDTO;
 
-    const findMenu = await this.menusRepository.findOne(menuId);
+    const findMenu = await this.menusRepository.findOne({
+      where: { id: menuId, user: { userId: userId } },
+    });
 
     if (findMenu) {
       await this.menusRepository
@@ -183,7 +230,7 @@ export class MenuService {
               : findMenu.bookmark
             : findMenu.bookmark,
           ingredients: ingredients
-            ? ingredients.join(',')
+            ? stringifyIngredients(ingredients)
             : findMenu.ingredients,
         })
         .where({ id: menuId })
@@ -220,10 +267,23 @@ export class MenuService {
     result.code = HttpStatus.OK;
     return result;
   }
-  async deleteMenu(menuId: string) {
+  async deleteMenu(accessToken: string, menuId: string) {
     const result = new ModelDTO.ResponseDTO();
 
-    const findMenu = await this.menusRepository.findOne(menuId);
+    const decodeToken = decodeAccessToken(accessToken);
+
+    if (!decodeToken) {
+      result.code = HttpStatus.OK;
+      result.message = '[Error]Token Invalid.';
+      result.payload = '';
+      return result;
+    }
+
+    const userId = decodeToken.userId;
+
+    const findMenu = await this.menusRepository.findOne({
+      where: { id: menuId, user: { userId: userId } },
+    });
 
     if (findMenu) {
       await this.menusRepository.delete(menuId);
