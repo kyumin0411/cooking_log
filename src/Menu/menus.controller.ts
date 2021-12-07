@@ -89,7 +89,7 @@ export class MenuController {
   ) {
     const getRecipesResult = await this.recipeService.getRecipes(menuId);
     const result = await this.menuService.getMenu(
-      // req.headers.authorization,
+      req.headers.authorization,
       menuId,
       getRecipesResult.payload,
     );
@@ -115,7 +115,7 @@ export class MenuController {
     @Query() query: MenuDTO.PatchMenuReqDTO,
   ) {
     const result = await this.menuService.patchMenu(
-      // req.headers.authorization,
+      req.headers.authorization,
       menuId,
       query,
     );
@@ -140,7 +140,7 @@ export class MenuController {
     @Param('menuId') menuId: string,
   ) {
     const result = await this.menuService.deleteMenu(
-      // req.headers.authorization,
+      req.headers.authorization,
       menuId,
     );
     res.status(result.code).json(result);
