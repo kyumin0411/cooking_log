@@ -45,7 +45,10 @@ export class MenuController {
     @Body() body: MenuDTO.PostMenuBodyDTO,
   ) {
     console.log(req.headers.authorization);
-    const result = await this.menuService.postMenu(body);
+    const result = await this.menuService.postMenu(
+      req.headers.authorization,
+      body,
+    );
     res.status(result.code).json(result);
   }
 
