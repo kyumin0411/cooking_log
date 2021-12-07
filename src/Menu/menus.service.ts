@@ -72,8 +72,19 @@ export class MenuService {
     return result;
   }
 
-  async getMenus(getMenusReqDTO: MenuDTO.GetMenusReqDTO, accessToken: string) {
+  async getMenus(accessToken: string, getMenusReqDTO: MenuDTO.GetMenusReqDTO) {
     const result = new ModelDTO.ResponseDTO();
+
+    const decodeToken = decodeAccessToken(accessToken);
+
+    if (!decodeToken) {
+      result.code = HttpStatus.OK;
+      result.message = '[Error]Token Invalid.';
+      result.payload = '';
+      return result;
+    }
+
+    const userId = decodeToken.userId;
 
     const { title, ingredients, bookmark } = getMenusReqDTO;
 
@@ -99,6 +110,7 @@ export class MenuService {
     if (bookmark === 'true') {
       findQuery.push(`bookmark = 1`);
     }
+    findQuery.push(`userUserId = '${userId}'`);
     const findQueryString = findQuery.join(' AND ');
     const getMenus = await this.menusRepository
       .createQueryBuilder()

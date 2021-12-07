@@ -44,7 +44,6 @@ export class MenuController {
     @Res() res: Response,
     @Body() body: MenuDTO.PostMenuBodyDTO,
   ) {
-    console.log(req.headers.authorization);
     const result = await this.menuService.postMenu(
       req.headers.authorization,
       body,
@@ -65,8 +64,8 @@ export class MenuController {
     @Query() query: MenuDTO.GetMenusReqDTO,
   ) {
     const result = await this.menuService.getMenus(
-      query,
       req.headers.authorization,
+      query,
     );
     res.status(result.code).json(result);
   }
@@ -90,6 +89,7 @@ export class MenuController {
   ) {
     const getRecipesResult = await this.recipeService.getRecipes(menuId);
     const result = await this.menuService.getMenu(
+      // req.headers.authorization,
       menuId,
       getRecipesResult.payload,
     );
@@ -114,7 +114,11 @@ export class MenuController {
     @Param('menuId') menuId: string,
     @Query() query: MenuDTO.PatchMenuReqDTO,
   ) {
-    const result = await this.menuService.patchMenu(menuId, query);
+    const result = await this.menuService.patchMenu(
+      // req.headers.authorization,
+      menuId,
+      query,
+    );
     res.status(result.code).json(result);
   }
 
@@ -135,7 +139,10 @@ export class MenuController {
     @Res() res: Response,
     @Param('menuId') menuId: string,
   ) {
-    const result = await this.menuService.deleteMenu(menuId);
+    const result = await this.menuService.deleteMenu(
+      // req.headers.authorization,
+      menuId,
+    );
     res.status(result.code).json(result);
   }
 }
