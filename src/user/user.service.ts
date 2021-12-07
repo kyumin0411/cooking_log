@@ -84,4 +84,21 @@ export class UserService {
     result.code = HttpStatus.OK;
     return result;
   }
+
+  async deleteUser(userId: string) {
+    const result = new ModelDTO.ResponseDTO();
+
+    const findUser = this.userRepository.findOne(userId);
+
+    if (findUser) {
+      this.userRepository.delete(userId);
+      result.message = 'Delete Success.';
+      result.payload = '';
+    } else {
+      result.message = '[Error] User Not Found.';
+      result.payload = '';
+    }
+    result.code = HttpStatus.OK;
+    return result;
+  }
 }
