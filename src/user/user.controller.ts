@@ -8,6 +8,7 @@ import {
   Get,
   Param,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'src/user/user.service';
@@ -65,6 +66,27 @@ export class UserController {
     @Param('userId') userId: string,
   ) {
     const result = await this.userService.getUser(userId);
+    res.status(result.code).json(result);
+  }
+
+  @Delete('/:userId')
+  @ApiOperation({ summary: '회원 탈퇴' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: '',
+    description: '',
+  })
+  @ApiParam({
+    name: 'userId',
+    type: 'string',
+    description: '삭제할 유저 아이디',
+  })
+  async deleteUser(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('userId') userId: string,
+  ) {
+    const result = await this.userService.deleteUser(userId);
     res.status(result.code).json(result);
   }
 }
