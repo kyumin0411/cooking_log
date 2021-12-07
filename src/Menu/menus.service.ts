@@ -2,8 +2,9 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import * as ModelDTO from '../dto/model.dto';
 import * as MenuDTO from '../dto/menu.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Menu } from 'src/entity';
+import { Menu, User } from 'src/entity';
 import { Like, Repository } from 'typeorm';
+import { decodeAccessToken } from 'utils/token.manager';
 
 const moment = require('moment');
 
@@ -14,8 +15,22 @@ export class MenuService {
     private menusRepository: Repository<Menu>,
   ) {}
 
-  async postMenu(postMenuBodyDTO: MenuDTO.PostMenuBodyDTO) {
+  async postMenu(
+    accessToken: string,
+    postMenuBodyDTO: MenuDTO.PostMenuBodyDTO,
+  ) {
     const result = new ModelDTO.ResponseDTO();
+
+    const decodeToken = decodeAccessToken(accessToken);
+
+    if (!decodeToken) {
+      result.code = HttpStatus.OK;
+      result.message = '[Error]Token Invalid.';
+      result.payload = '';
+      return result;
+    }
+
+    const userId = decodeToken.userId;
 
     const createdMenu = new Menu();
 
@@ -23,6 +38,8 @@ export class MenuService {
     createdMenu.difficulty = postMenuBodyDTO.difficulty;
     createdMenu.image = postMenuBodyDTO.image;
     createdMenu.ingredients = postMenuBodyDTO.ingredients.join(',');
+    createdMenu.user = new User();
+    createdMenu.user.userId = userId;
 
     await this.menusRepository.insert(createdMenu);
 
