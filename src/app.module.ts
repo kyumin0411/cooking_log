@@ -39,7 +39,7 @@ import * as Joi from 'joi';
       entities: [Menu, Recipe, User],
       migrations: ['src/migration/*.{ts,js}'],
       migrationsRun: false,
-      synchronize: true,
+      synchronize: false,
       autoLoadEntities: true,
     }),
     MenuModule,
